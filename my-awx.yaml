@@ -1,0 +1,14 @@
+---
+apiVersion: awx.ansible.com/v1beta1
+kind: AWX
+metadata:
+  name: awx
+spec:  
+  # tower_ingress_type: LoadBalancer
+  # tower_ingress_annotations: |
+  #   alb.ingress.kubernetes.io/scheme: internet-facing
+  #   kubernetes.io/ingress.class: alb
+  #   alb.ingress.kubernetes.io/target-type: ip
+  # tower_hostname: ''
+  
+  

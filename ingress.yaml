@@ -1,0 +1,25 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: awx-ingress
+  annotations: 
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/target-type: ip
+spec:  
+  rules:
+    # - host: awx.justpipeline.com
+    #   http:
+    #     paths:
+    #       - path: /*
+    #         backend:
+    #           serviceName: awx-service
+    #           servicePort: 80
+    - host: game.justpipeline.com
+      http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: service-2048
+              servicePort: 80
+          
