@@ -23,7 +23,7 @@ module "ingress_controller_role_with_oidc" {
 
 resource "aws_iam_policy" "ingress_controller_policy" {
   name   = "ingress-controller-policy"
-  policy = file("ingress-controller-policy.json")
+  policy = file("./aws_policies/ingress-controller-policy.json")
 }
 
 
@@ -52,5 +52,5 @@ module "external_dns_role_with_oidc" {
 
 resource "aws_iam_policy" "external_dns_policy" {
   name   = "external-dns-policy"
-  policy = file("external-dns-policy.json")
+  policy = file("./aws_policies/external-dns-policy.json")
 }
