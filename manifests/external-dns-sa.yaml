@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:  
+  annotations:                                                                        
+    eks.amazonaws.com/role-arn: arn:aws:iam::021510583954:role/external-dns-role            
+  name: external-dns-sa
+  namespace: kube-system

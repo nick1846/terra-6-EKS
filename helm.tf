@@ -10,8 +10,8 @@ provider "helm" {
   }
 }
 
-resource "helm_release" "aws_ingress_controller" {
-  name       = "aws-ingress-controller"
+resource "helm_release" "helm-ingress" {
+  name       = "helm-ingress"
   chart      = "aws-load-balancer-controller"
   repository = "https://aws.github.io/eks-charts"
   version    = "1.1.5"
