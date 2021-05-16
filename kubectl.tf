@@ -13,7 +13,7 @@ provider "kubectl" {
 
 
 data "kubectl_path_documents" "manifests" {
-  pattern = "./manifests/*.yaml"
+  pattern = "./k8s_manifests/*.yaml"
 }
 
 resource "kubectl_manifest" "my_manifests" {
