@@ -52,17 +52,3 @@ variable "my_map_users" {
 variable "my_node_groups" {
 }
 
-#my-helm namespace - helm provider will install on this namespace
-
-variable "helm_namespace" {
-}
-
-#service account namespace for trusted role in EKS
-
-variable "sa_namespace" {
-}
-
-#service account for trusted role in EKS
-
-variable "service_account" {
-}

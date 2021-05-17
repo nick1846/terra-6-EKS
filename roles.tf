@@ -14,7 +14,7 @@ module "ingress_controller_role_with_oidc" {
 
   provider_url = module.my_eks.cluster_oidc_issuer_url
 
-  oidc_fully_qualified_subjects = ["system:serviceaccount:${var.sa_namespace}:${var.service_account}"]
+  oidc_fully_qualified_subjects = ["system:serviceaccount:my-controllers-ns:ingress-controller-sa"]
 
   role_policy_arns           = [aws_iam_policy.ingress_controller_policy.arn, ]
   number_of_role_policy_arns = 1
@@ -43,7 +43,7 @@ module "external_dns_role_with_oidc" {
 
   provider_url = module.my_eks.cluster_oidc_issuer_url
 
-  oidc_fully_qualified_subjects = ["system:serviceaccount:kube-system:external-dns-sa"]
+  oidc_fully_qualified_subjects = ["system:serviceaccount:my-controllers-ns:external-dns-sa"]
 
   role_policy_arns           = [aws_iam_policy.external_dns_policy.arn, ]
   number_of_role_policy_arns = 1

@@ -3,5 +3,3 @@
 
 # Crash log files
 crash.log
-
-*.tfstate*

@@ -39,9 +39,3 @@ my_node_groups = {
 }
 
 
-helm_namespace = "kube-system"
-
-
-sa_namespace = "kube-system"
-
-service_account = "ingress-controller-sa"

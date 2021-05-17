@@ -6,9 +6,24 @@ metadata:
     alb.ingress.kubernetes.io/scheme: internet-facing
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/target-type: ip
-    external-dns.alpha.kubernetes.io/hostname: game.justpipeline.com, awx.justpipeline.com
+    external-dns.alpha.kubernetes.io/hostname: game.justpipeline.com, awx.justpipeline.com, pgadmin.justpipeline.com
+    external-dns.alpha.kubernetes.io/ttl: "100"
 spec:  
   rules:
+    - host: justpipeline.com
+      http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: web-service
+              servicePort: 80   
+    - host: pgadmin.justpipeline.com
+      http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: pgadmin-service
+              servicePort: 8080 
     - host: awx.justpipeline.com
       http:
         paths:
@@ -23,4 +38,5 @@ spec:
             backend:
               serviceName: service-2048
               servicePort: 80
+      
           

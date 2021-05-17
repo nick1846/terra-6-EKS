@@ -4,4 +4,4 @@ metadata:
   annotations:                                                                        
     eks.amazonaws.com/role-arn: arn:aws:iam::021510583954:role/ingress-controller-role             
   name: ingress-controller-sa
-  namespace: kube-system
+  namespace: my-controllers-ns

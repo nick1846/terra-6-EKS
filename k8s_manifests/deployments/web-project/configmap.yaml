@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-configmap  
+data:
+  postgres-db: devops_db  
+  postgres-data: /data
