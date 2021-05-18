@@ -45,8 +45,8 @@ resource "helm_release" "helm-ingress" {
 
 #Install External DNS controller with helm
 
-resource "helm_release" "helm-dns" {
-  name       = "helm-dns"
+resource "helm_release" "helm-ext-dns" {
+  name       = "helm-ext-dns"
   chart      = "external-dns"
   repository = "https://charts.bitnami.com/bitnami"
   version    = "4.12.3"
@@ -86,3 +86,40 @@ resource "helm_release" "helm-dns" {
     value = "0"
   }
 }
+
+#Install Prometheus with helm
+
+resource "helm_release" "helm-prometheus" {
+  name       = "helm-prometheus"
+  chart      = "prometheus"
+  repository = "https://prometheus-community.github.io/helm-charts"
+  version    = "14.0.0"
+  namespace  = "prometheus-ns"
+  depends_on = [kubectl_manifest.my_namespaces, kubectl_manifest.my_metric_server]
+
+  set {
+    name  = "alertmanager.persistentVolume.storageClass"
+    value = "gp2"
+  }
+  set {
+    name  = "server.persistentVolume.storageClass"
+    value = "gp2"
+  }
+}
+
+
+#Install Grafana with helm
+
+resource "helm_release" "helm-grafana" {
+  name       = "helm-grafana"
+  chart      = "grafana"
+  repository = "https://grafana.github.io/helm-charts"
+  version    = "6.9.0"
+  namespace  = "default"
+  depends_on = [helm_release.helm-prometheus]
+  values = [file("./helm_values/grafana/values.yaml")]
+}
+    
+  
+ 
+

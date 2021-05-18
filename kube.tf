@@ -1,5 +1,5 @@
 provider "kubectl" {
-  apply_retry_count      = 5
+  apply_retry_count      = 15
   host                   = data.aws_eks_cluster.cluster.endpoint
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
   load_config_file       = false
@@ -12,16 +12,39 @@ provider "kubectl" {
 }
 
 
-resource "kubernetes_namespace" "my_controllers_ns" {
-  metadata {
-    name = "my-controllers-ns"
-  }
+# resource "kubernetes_namespace" "my_controllers_ns" {
+#   metadata {
+#     name = "my-controllers-ns"
+#   }
+# }
+
+
+data "kubectl_path_documents" "namespaces" {
+  pattern = "./k8s_manifests/namespaces/*.yaml"
+}
+
+resource "kubectl_manifest" "my_namespaces" {
+  count     = length(data.kubectl_path_documents.namespaces.documents)
+  yaml_body = element(data.kubectl_path_documents.namespaces.documents, count.index)
+}
+
+################################
+#Apply .yaml manifests from ./k8s_manifests/deployments/
+
+
+data "kubectl_path_documents" "metric_server" {
+  pattern = "./k8s_manifests/deployments/monitoring/metric_server/*.yaml"
+}
+
+resource "kubectl_manifest" "my_metric_server" {
+  count     = length(data.kubectl_path_documents.metric_server.documents)
+  yaml_body = element(data.kubectl_path_documents.metric_server.documents, count.index)  
 }
 
 ################################
 #Apply .yaml manifests from ./k8s_manifests/controllers_prerequisites/
 
-data "kubectl_path_documents" "my_controllers_prerequisites" {
+data "kubectl_path_documents" "controllers_prerequisites" {
   pattern = "./k8s_manifests/controllers_prerequisites/*.yaml"
 }
 
@@ -29,14 +52,14 @@ resource "kubectl_manifest" "my_controllers_prerequisites" {
   count     = length(data.kubectl_path_documents.controllers_prerequisites.documents)
   yaml_body = element(data.kubectl_path_documents.controllers_prerequisites.documents, count.index)
 
-  depends_on = [kubernetes_namespace.my_controllers_ns]
+  depends_on = [kubectl_manifest.my_namespaces]
 }
 
 ################################
 #Apply .yaml manifests from ./k8s_manifests/ingress/
 
 
-data "kubectl_path_documents" "my_ingress" {
+data "kubectl_path_documents" "ingress" {
   pattern = "./k8s_manifests/ingress/*.yaml"
 }
 
@@ -51,38 +74,40 @@ resource "kubectl_manifest" "my_ingress" {
 #Apply .yaml manifests from ./k8s_manifests/deployments/
 
 
-data "kubectl_path_documents" "my_awx" {
+data "kubectl_path_documents" "awx" {
   pattern = "./k8s_manifests/deployments/awx/*.yaml"
 }
 
 resource "kubectl_manifest" "my_awx" {
-  count     = length(data.kubectl_path_documents.deployments.documents)
-  yaml_body = element(data.kubectl_path_documents.deployments.documents, count.index)
-
+  count     = length(data.kubectl_path_documents.awx.documents)
+  yaml_body = element(data.kubectl_path_documents.awx.documents, count.index)
+  depends_on = [kubectl_manifest.my_namespaces]
 }
 
 ################################
 #Apply .yaml manifests from ./k8s_manifests/deployments/
 
 
-data "kubectl_path_documents" "my_web" {
-  pattern = "./k8s_manifests/deployments/web-project/*.yaml"
+data "kubectl_path_documents" "web_project" {
+  pattern = "./k8s_manifests/deployments/web_project/*.yaml"
 }
 
 resource "kubectl_manifest" "my_web" {
-  count     = length(data.kubectl_path_documents.my_web.documents)
-  yaml_body = element(data.kubectl_path_documents.my_web.documents, count.index)
+  count     = length(data.kubectl_path_documents.web_project.documents)
+  yaml_body = element(data.kubectl_path_documents.web_project.documents, count.index)  
+  depends_on = [kubectl_manifest.my_namespaces]
 }
 
 ################################
 #Apply .yaml manifests from ./k8s_manifests/deployments/
 
 
-data "kubectl_path_documents" "my_game" {
+data "kubectl_path_documents" "game" {
   pattern = "./k8s_manifests/deployments/game/*.yaml"
 }
 
 resource "kubectl_manifest" "my_game" {
-  count     = length(data.kubectl_path_documents.my_game.documents)
-  yaml_body = element(data.kubectl_path_documents.my_game.documents, count.index)
+  count     = length(data.kubectl_path_documents.game.documents)
+  yaml_body = element(data.kubectl_path_documents.game.documents, count.index)
+  depends_on = [kubectl_manifest.my_namespaces]
 }
