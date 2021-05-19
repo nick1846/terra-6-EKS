@@ -2,6 +2,7 @@ persistence:
   enabled: true
   storageClassName: "gp2"
 
+adminPassword: "grafana2021"
 
 datasources:
   datasources.yaml:
@@ -9,6 +10,6 @@ datasources:
     datasources:
     - name: Prometheus
       type: prometheus
-      url: http://helm-prometheus-server.prometheus.svc.cluster.local
+      url: http://helm-prometheus-server.prometheus-ns.svc.cluster.local
       access: proxy
       isDefault: true 
