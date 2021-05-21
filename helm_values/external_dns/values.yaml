@@ -1,0 +1,32 @@
+
+
+## This controls which types of resource external-dns should 'watch' for new
+## DNS entries.
+sources:
+  - service
+  - ingress
+
+## The DNS provider where the DNS records will be created (options: aws, google, inmemory, azure, rfc2136 )
+provider: aws
+
+aws:
+
+  ## AWS region
+  ##
+  region: "us-east-2"
+
+
+
+## Limit possible target zones by domain suffixes (optional)
+domainFilters: ["justpipeline.com"]
+
+
+## Modify how DNS records are sychronized between sources and providers (options: sync, upsert-only )
+policy: upsert-only
+
+
+podSecurityContext:
+  fsGroup: 65534
+  runAsUser: 0
+
+

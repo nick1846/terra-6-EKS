@@ -38,7 +38,7 @@ data "kubectl_path_documents" "metric_server" {
 
 resource "kubectl_manifest" "my_metric_server" {
   count     = length(data.kubectl_path_documents.metric_server.documents)
-  yaml_body = element(data.kubectl_path_documents.metric_server.documents, count.index)  
+  yaml_body = element(data.kubectl_path_documents.metric_server.documents, count.index)
 }
 
 ################################
@@ -67,17 +67,18 @@ resource "kubectl_manifest" "my_ingress" {
   count     = length(data.kubectl_path_documents.ingress.documents)
   yaml_body = element(data.kubectl_path_documents.ingress.documents, count.index)
 
-  depends_on = [    
-    kubectl_manifest.my_awx, 
+  depends_on = [
+    kubectl_manifest.my_awx,
     kubectl_manifest.my_web, 
     kubectl_manifest.my_game,
     helm_release.helm-grafana,
-    helm_release.helm-ingress
+    helm_release.helm-ingress,
+    helm_release.helm-traefik
   ]
 }
 
-################################
-#Apply .yaml manifests from ./k8s_manifests/deployments/
+###############################
+##Apply .yaml manifests from ./k8s_manifests/deployments/
 
 
 data "kubectl_path_documents" "awx" {
@@ -85,8 +86,8 @@ data "kubectl_path_documents" "awx" {
 }
 
 resource "kubectl_manifest" "my_awx" {
-  count     = length(data.kubectl_path_documents.awx.documents)
-  yaml_body = element(data.kubectl_path_documents.awx.documents, count.index)
+  count      = length(data.kubectl_path_documents.awx.documents)
+  yaml_body  = element(data.kubectl_path_documents.awx.documents, count.index)
   depends_on = [kubectl_manifest.my_namespaces]
 }
 
@@ -113,7 +114,7 @@ data "kubectl_path_documents" "game" {
 }
 
 resource "kubectl_manifest" "my_game" {
-  count     = length(data.kubectl_path_documents.game.documents)
-  yaml_body = element(data.kubectl_path_documents.game.documents, count.index)
+  count      = length(data.kubectl_path_documents.game.documents)
+  yaml_body  = element(data.kubectl_path_documents.game.documents, count.index)
   depends_on = [kubectl_manifest.my_namespaces]
 }

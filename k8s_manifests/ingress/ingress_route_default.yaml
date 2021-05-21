@@ -1,0 +1,53 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: myapp-tls
+  namespace: default  
+  labels:
+    app: traefik
+spec:
+  entryPoints:
+  - websecure
+  routes:
+  - match: Host(`awx.justpipeline.com`)
+    kind: Rule
+    services:
+      - name: awx-service
+        port: 80
+  - match: Host(`game.justpipeline.com`)
+    kind: Rule
+    services:
+      - name: service-2048
+        port: 80
+  - match: Host(`www.justpipeline.com`)
+    kind: Rule
+    services:
+      - name: web-service
+        port: 80
+  - match: Host(`justpipeline.com`)
+    kind: Rule
+    services:
+      - name: web-service
+        port: 80
+  - match: Host(`traefik.justpipeline.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
+    kind: Rule
+    services:        
+      - name: api@internal
+        kind: TraefikService  
+  - match: Host(`grafana.justpipeline.com`)
+    kind: Rule
+    services:
+      - name: helm-grafana
+        port: 80
+  - match: Host(`pgadmin.justpipeline.com`)
+    kind: Rule
+    services:        
+      - name: pgadmin-service
+        port: 8080
+        
+
+
+
+
+    
+    

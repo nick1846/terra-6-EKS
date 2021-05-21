@@ -85,6 +85,22 @@ resource "helm_release" "helm-ext-dns" {
     name  = "podSecurityContext.runAsUser"
     value = "0"
   }
+  set {
+    name  = "registry"
+    value = "noop"
+  }
+}
+
+
+#Install Traefik controller with helm
+
+resource "helm_release" "helm-traefik" {
+  name       = "helm-traefik"
+  chart      = "traefik"
+  repository = "https://helm.traefik.io/traefik"
+  version    = "9.19.1"
+  namespace  = "my-controllers-ns"
+  values     = [file("./helm_values/traefik/values.yaml")]
 }
 
 #Install Prometheus with helm
@@ -108,7 +124,7 @@ resource "helm_release" "helm-prometheus" {
 }
 
 
-#Install Grafana with helm
+##Install Grafana with helm
 
 resource "helm_release" "helm-grafana" {
   name       = "helm-grafana"
@@ -117,9 +133,8 @@ resource "helm_release" "helm-grafana" {
   version    = "6.9.0"
   namespace  = "default"
   depends_on = [helm_release.helm-prometheus]
-  values = [file("./helm_values/grafana/values.yaml")]
+  values     = [file("./helm_values/grafana/values.yaml")]
 }
-    
-  
- 
+
+
 
